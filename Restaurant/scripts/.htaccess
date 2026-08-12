@@ -1,0 +1,3 @@
+# Interdit l'accès direct par le navigateur aux scripts de maintenance
+# (sauvegarde.php ne fonctionne que via la ligne de commande).
+Require all denied

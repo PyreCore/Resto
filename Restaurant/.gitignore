@@ -1,0 +1,17 @@
+# Journaux d'erreurs PHP (créés automatiquement par config.php)
+logs/
+
+# Sauvegardes de la base de données (scripts/sauvegarde.php)
+backups/
+
+# Configuration locale : contient les identifiants de connexion.
+# Ne pas versionner ; la recréer sur chaque installation.
+config.php
+
+# IDE
+.idea/
+*.iml
+
+# Fichiers système
+Thumbs.db
+.DS_Store

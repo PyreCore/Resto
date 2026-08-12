@@ -1,0 +1,26 @@
+# ============================================
+#  LeDélise - Configuration Apache (.htaccess)
+# ============================================
+
+# Empêche l'affichage de la liste des fichiers du dossier dans le navigateur
+Options -Indexes
+
+# Définit index.php comme page par défaut du dossier
+DirectoryIndex index.php
+
+# Blocage de l'accès direct par le navigateur aux fichiers sensibles :
+# - config.php     : contient les identifiants de connexion à la base
+# - database.sql   : contient le schéma et les données de la base
+# - *.sql / *.log  : exports et journaux d'erreurs
+# - fichiers cachés (.*) : .gitignore, .idea, etc.
+<FilesMatch "(?i)^(config\.php|database\.sql|sauvegarde\.bat|.*\.sql|.*\.log|.*\.bak|.*\.tmp|\.(.*))$">
+    Require all denied
+</FilesMatch>
+
+# Blocage de l'accès direct aux dossiers internes (journaux, sauvegardes,
+# scripts de maintenance) : ces fichiers ne doivent jamais être consultés
+# par le navigateur, même si un .htaccess local manquait.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(logs|backups|scripts)/ - [F,L]
+</IfModule>

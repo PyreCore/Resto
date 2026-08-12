@@ -1,0 +1,351 @@
+/* ============================================
+   Feuille de style du site LeDélise
+   Couleurs du thème : variables CSS définies par theme.php
+   (--c-fond, --c-principale, --c-accent, --c-accent-fonce,
+   --c-accent-clair, --c-fond-tres-clair, --c-fond-clair,
+   --c-fond-clair-hover, --c-bordure, --c-fond-nav).
+   Les couleurs sont modifiables depuis admin/parametres.php.
+   ============================================ */
+
+/* ---------- Structure générale ---------- */
+body{ margin:0; padding:0; min-height:100vh; display:flex; flex-direction:column;
+      font-family:Arial, Helvetica, sans-serif; color:#333; padding-top:46px; padding-bottom:46px; }
+
+.fond{ position:fixed; top:0; left:0; right:0; bottom:0; z-index:-1; background-color:var(--c-fond);
+       background-image:url('image/Resto.jpg'); background-size:cover; background-position:center;
+       background-repeat:no-repeat; }
+
+.fond::after{ content:""; position:absolute; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); }
+
+.container{ position:relative; width:480px; max-width:92%; margin:auto; background:rgba(255,255,255,0.95);
+             padding:8px 24px 8px; border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,0.35); }
+
+.page-formulaire{ justify-content:center; }
+.page-formulaire .container, .page-admin .container{ margin:auto; }
+.page-admin{ justify-content:center; }
+
+h1, h3{ text-align:center; color:var(--c-principale); margin:0 0 4px; font-size:18px; }
+
+hr{ border:none; height:2px; background:linear-gradient(to right, transparent, var(--c-accent-clair), transparent); margin:10px 0 14px; }
+
+.note{ text-align:center; margin:0 0 4px; font-size:13px; color:#555; }
+
+a{ color:var(--c-principale); text-decoration:none; font-weight:bold; }
+a:hover{ text-decoration:underline; }
+
+/* ---------- Champs de formulaire ---------- */
+fieldset{ border:1px solid var(--c-bordure); border-radius:6px; padding:5px 10px; margin-bottom:6px; }
+
+.grille-commande{ display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:6px; }
+.grille-commande fieldset{ margin-bottom:0; }
+.champ-plein{ grid-column:1 / -1; }
+
+.ligne-double{ display:grid; grid-template-columns:1fr auto; gap:8px; align-items:center; }
+.ligne-double .montant{ margin:0; text-align:right; }
+.ligne-double .btn-secondaire{ width:auto; margin:0; white-space:nowrap; }
+
+@media (max-width:600px){
+    .grille-commande{ grid-template-columns:1fr; }
+    .ligne-double{ grid-template-columns:1fr; }
+    .ligne-double .btn-secondaire{ width:100%; }
+}
+
+label{ display:block; font-weight:bold; color:var(--c-accent-fonce); margin-bottom:2px; font-size:11px; }
+
+/* Étiquette et champ centrés dans le formulaire de connexion */
+.form-login label{ text-align:center; display:block; }
+.form-login input[type="password"]{ width:100%; max-width:280px; display:block; margin:0 auto 4px; }
+
+select, input[type="text"], input[type="number"], input[type="tel"], input[type="color"]{
+    width:100%; padding:6px 8px; border:1px solid #ccc; border-radius:5px; font-size:12px;
+    box-sizing:border-box; background:var(--c-fond-tres-clair); color:#333;
+}
+
+/* Listes déroulantes : flèche dessinée avec des dégradés aux couleurs du thème */
+select{ appearance:none; -webkit-appearance:none; -moz-appearance:none;
+        background-image:
+            linear-gradient(45deg, transparent 50%, var(--c-principale) 50%),
+            linear-gradient(135deg, var(--c-principale) 50%, transparent 50%);
+        background-position: right 12px center, right 8px center;
+        background-size: 5px 5px, 5px 5px;
+        background-repeat:no-repeat; padding-right:26px; cursor:pointer; }
+
+option{ background:#fff; color:#333; padding:4px; }
+
+.montant{ margin:5px 0 0; font-size:12px; font-weight:bold; color:var(--c-principale); text-align:right; min-height:14px; }
+
+optgroup{ background:var(--c-fond-tres-clair); color:var(--c-accent-fonce); font-weight:bold; font-style:normal; }
+
+/* Menu « choisir le plat » : fond sombre, texte clair, flèche claire */
+#menu{ background-color:var(--c-fond);
+       background-image:
+            linear-gradient(45deg, transparent 50%, var(--c-accent-clair) 50%),
+            linear-gradient(135deg, var(--c-accent-clair) 50%, transparent 50%);
+       background-position: right 14px center, right 10px center;
+       background-size: 5px 5px, 5px 5px;
+       background-repeat:no-repeat; color:var(--c-accent-clair);
+       border:1px solid var(--c-principale); border-radius:8px; padding:5px 26px 5px 10px; font-size:12px; cursor:pointer; }
+
+#menu:hover{ border-color:var(--c-accent); }
+
+/* Au focus : la règle générique « background:#fff » effacerait la flèche, on la redéclare */
+#menu:focus{ border-color:var(--c-accent); background-color:var(--c-fond);
+             background-image:
+                 linear-gradient(45deg, transparent 50%, var(--c-accent-clair) 50%),
+                 linear-gradient(135deg, var(--c-accent-clair) 50%, transparent 50%);
+             background-position: right 14px center, right 10px center;
+             background-size: 5px 5px, 5px 5px;
+             background-repeat:no-repeat; }
+
+#menu option{ background:var(--c-fond-tres-clair); color:var(--c-accent-fonce); }
+#menu option[value=""]{ color:#999; font-style:italic; }
+#menu optgroup{ background:var(--c-accent-fonce); color:#fff; }
+
+select:focus, input:focus{ outline:none; border-color:var(--c-accent); background:#fff; }
+
+input[readonly]{ background:var(--c-fond-tres-clair); color:#555; cursor:default; }
+
+button, input[type="submit"]{ width:100%; margin-top:2px; padding:7px; background:var(--c-accent); color:#fff;
+    border:none; border-radius:5px; font-size:13px; font-weight:bold; cursor:pointer; }
+
+button:hover, input[type="submit"]:hover{ background:var(--c-accent); filter:brightness(0.9); }
+
+/* ---------- Administration : conteneurs et statistiques ---------- */
+.container.liste{ width:900px; max-width:95%; }
+.container.admin{ width:860px; max-width:95%; }
+
+.stats{ display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:10px; margin-bottom:14px; }
+.stat{ background:#fff; border:1px solid var(--c-bordure); border-radius:10px; padding:12px; text-align:center; }
+.stat strong{ display:block; font-size:22px; color:var(--c-principale); }
+.stat span{ font-size:12px; color:#777; }
+
+/* ---------- Filtres ---------- */
+.filtres{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px; }
+.filtres input[type="text"], .filtres input[type="date"], .filtres select{ flex:1; min-width:160px; }
+.filtres button{ width:auto; padding:6px 18px; margin:0; }
+.btn-action.reset{ align-self:center; background:var(--c-accent-fonce); color:#fff; padding:6px 12px; }
+
+.carte-actions{ display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
+
+/* Notification de nouvelle commande */
+.notification{ display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:12px;
+    padding:10px 14px; background:var(--c-fond-clair); border:1px solid var(--c-accent-clair); border-radius:8px;
+    font-size:13px; color:var(--c-accent-fonce); box-shadow:0 2px 8px rgba(0,0,0,0.1); }
+.notification strong{ color:var(--c-principale); }
+
+/* Notification d'information (ex. : commandes en cours dans l'historique) */
+.notification.alerte{ border-width:2px; border-color:var(--c-principale); }
+.notification.alerte a{ color:var(--c-principale); text-decoration:underline; }
+
+/* Récapitulatif du jour (historique) */
+.notification.recap{ border-width:2px; border-color:var(--c-accent-clair); background:var(--c-fond-tres-clair); }
+.notification.recap strong{ color:var(--c-accent-fonce); }
+
+/* Badge du nombre de commandes en cours (barre de navigation admin) */
+.badge-nb{ display:inline-block; min-width:16px; margin-left:6px; padding:1px 6px; border-radius:10px;
+    background:#c62828; color:#fff; font-size:10px; line-height:1.5; text-align:center; vertical-align:middle; }
+
+/* Boutons d'action de statut */
+.btn-action.statut.en-cours{ background:var(--c-accent-clair); color:var(--c-accent-fonce); }
+.btn-action.statut.livree{ background:#2e7d32; color:#fff; }
+.btn-action.statut.annulee{ background:#c62828; color:#fff; }
+.btn-action.statut:hover{ text-decoration:none; filter:brightness(0.9); }
+
+/* Badges */
+.badge{ display:inline-block; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:bold; white-space:nowrap; }
+.badge-surplace{ background:var(--c-fond-clair); color:var(--c-principale); border:1px solid var(--c-accent-clair); }
+.badge-emporter{ background:#e8f5e9; color:#2e7d32; border:1px solid #a5d6a7; }
+
+/* Bouton secondaire */
+.btn-secondaire{ margin-top:5px; background:var(--c-accent-clair); color:var(--c-accent-fonce); }
+.btn-secondaire:hover{ background:var(--c-accent-clair); filter:brightness(0.92); }
+
+/* Corbeille de commande */
+.vide{ margin:0; color:#888; font-size:12px; font-style:italic; text-align:center; }
+.ligne-corbeille{ display:flex; align-items:center; gap:10px; padding:3px 8px;
+    border-bottom:1px solid var(--c-fond-clair-hover); font-size:12px; }
+.ligne-corbeille .plat{ flex:1; color:#333; }
+.ligne-corbeille .prix{ font-weight:bold; color:var(--c-principale); white-space:nowrap; }
+.retirer{ width:auto; margin:0; padding:2px 10px; background:#c62828; font-size:16px; line-height:1.2; }
+.retirer:hover{ background:#a51f1f; }
+
+.total{ margin:5px 0 0; text-align:right; font-size:13px; font-weight:bold; color:var(--c-principale);
+        border-top:2px solid var(--c-accent-clair); padding-top:4px; }
+
+/* Cartes de commande */
+.carte{ background:#fff; border:1px solid var(--c-bordure); border-radius:10px; padding:12px 16px;
+        margin:0 0 12px; box-shadow:0 2px 6px rgba(0,0,0,0.06); }
+.carte-tete{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:8px; }
+.carte-ticket{ font-size:16px; font-weight:bold; color:var(--c-accent-fonce); }
+.carte-infos{ font-size:13px; color:#555; }
+.carte-plats{ list-style:none; margin:0 0 8px; padding:0; }
+.carte-plats li{ padding:4px 0; border-bottom:1px dashed var(--c-bordure); font-size:14px; color:#333; }
+.carte-plats li:last-child{ border-bottom:none; }
+.carte-date{ font-size:12px; color:#999; margin-bottom:8px; }
+.carte-total{ text-align:right; font-size:15px; font-weight:bold; color:var(--c-principale);
+              border-top:2px solid var(--c-accent-clair); padding-top:6px; }
+
+/* Historique : groupes par jour */
+.groupe-jour{ margin-bottom:18px; }
+.groupe-jour-tete{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap;
+    gap:6px; background:var(--c-accent-fonce); color:#fff; border-radius:8px; padding:8px 14px; margin-bottom:10px; }
+.groupe-jour-tete h2{ margin:0; font-size:14px; color:#fff; text-transform:capitalize; }
+.groupe-jour-tete span{ font-size:12px; font-weight:bold; color:var(--c-accent-clair); }
+.total-general{ text-align:center; background:var(--c-accent); color:#fff; font-weight:bold; font-size:15px;
+                padding:12px; border-radius:10px; }
+
+/* Tableaux */
+.zone-table{ overflow-x:auto; margin-bottom:12px; }
+.table-commandes{ width:100%; border-collapse:collapse; font-size:13px; }
+.table-commandes th, .table-commandes td{ border:1px solid var(--c-bordure); padding:8px 10px;
+    text-align:left; vertical-align:top; }
+.table-commandes th{ background:var(--c-accent-fonce); color:#fff; font-size:12px; text-transform:uppercase;
+    letter-spacing:0.5px; white-space:nowrap; }
+.table-commandes tbody tr:nth-child(even){ background:var(--c-fond-tres-clair); }
+.table-commandes tbody tr:hover{ background:var(--c-fond-clair-hover); }
+.table-commandes td.montant-total{ font-weight:bold; color:var(--c-principale); white-space:nowrap; text-align:right; }
+
+.ligne-annulee{ opacity:0.55; }
+.sous-infos{ color:#888; font-size:12px; }
+
+/* Badges de statut */
+.badge-statut{ display:inline-block; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:bold; white-space:nowrap; }
+.badge-statut.en-cours{ background:var(--c-fond-clair); color:var(--c-principale); border:1px solid var(--c-accent-clair); }
+.badge-statut.livree{ background:#e8f5e9; color:#2e7d32; border:1px solid #a5d6a7; }
+.badge-statut.annulee{ background:#fce4ec; color:#c62828; border:1px solid #ef9a9a; }
+
+/* Boutons d'action génériques */
+.btn-action{ display:inline-block; padding:5px 12px; border-radius:6px; font-size:12px;
+    font-weight:bold; text-decoration:none; white-space:nowrap; }
+.btn-action.supprimer{ background:#c62828; color:#fff; }
+.btn-action.supprimer:hover{ background:#a51f1f; text-decoration:none; }
+
+/* ---------- Gestion des plats ---------- */
+.bloc-plats{ margin-top:14px; }
+.formulaire-plat{ display:grid; grid-template-columns:1fr 1fr 1fr auto; gap:8px; align-items:end;
+    background:#fff; border:1px solid var(--c-bordure); border-radius:10px; padding:10px 12px; margin-bottom:12px; }
+.champ-plat label{ margin-bottom:2px; font-size:10px; }
+.formulaire-plat select, .formulaire-plat input[type="text"], .formulaire-plat input[type="number"]{ padding:4px 7px; font-size:11px; }
+.btn-plat{ width:auto; margin:0; white-space:nowrap; }
+.formulaire-plat .btn-action.reset{ margin:0; }
+
+/* Disposition côte à côte : plats à gauche, tables à droite */
+.layout-gestion{ display:grid; grid-template-columns:minmax(0,1fr) 320px; gap:16px; align-items:start; }
+.bloc-tables{ position:sticky; top:14px; }
+.bloc-tables .filtres input[type="number"]{ width:100%; }
+
+.liste-plats{ display:grid; gap:14px; }
+.groupe-plats{ background:#fff; border:1px solid var(--c-bordure); border-radius:10px; padding:12px 14px; }
+.titre-categorie{ margin:0 0 8px; font-size:14px; color:var(--c-accent-fonce); }
+.cellule-actions{ text-align:right; white-space:nowrap; }
+.cellule-actions .btn-action{ margin-left:6px; }
+
+@media (max-width:768px){
+    .formulaire-plat{ grid-template-columns:1fr; }
+    .btn-plat{ width:100%; }
+    .layout-gestion{ grid-template-columns:1fr; }
+    .bloc-tables{ position:static; }}
+
+/* ---------- Gestion des couleurs du site (admin/parametres.php) ---------- */
+.bloc-theme{ background:#fff; border:1px solid var(--c-bordure); border-radius:10px; padding:14px 16px; margin-bottom:14px; }
+.titre-section{ text-align:left; color:var(--c-accent-fonce); font-size:14px; margin:0 0 10px; }
+.grille-themes{ display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:10px; }
+.theme-carte{ display:flex; flex-direction:column; align-items:center; gap:6px; width:auto; margin:0;
+    padding:10px 8px; background:var(--c-fond-tres-clair); border:2px solid var(--c-bordure);
+    border-radius:8px; cursor:pointer; }
+.theme-carte:hover{ background:var(--c-fond-tres-clair); border-color:var(--c-principale); filter:none; }
+.theme-echantillon{ display:flex; width:100%; height:22px; border-radius:5px; overflow:hidden; border:1px solid #ccc; }
+.theme-echantillon i{ flex:1; }
+.theme-nom{ font-size:11px; font-weight:bold; color:var(--c-accent-fonce); }
+.grille-couleurs{ display:grid; grid-template-columns:repeat(auto-fit, minmax(170px, 1fr)); gap:10px; margin-bottom:12px; }
+.champ-couleur{ display:flex; flex-direction:column; gap:4px; }
+.champ-couleur input[type="color"]{ width:100%; height:38px; padding:2px; border:1px solid var(--c-bordure);
+    border-radius:6px; background:#fff; cursor:pointer; }
+.apercu-theme{ background:var(--c-fond); border:1px solid var(--c-bordure); border-radius:10px;
+    padding:14px; margin-bottom:12px; }
+.apercu-nav{ display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;
+    background:var(--c-fond-nav); border-radius:8px; padding:6px 12px; margin-bottom:12px; }
+.apercu-nav span{ color:var(--c-accent-clair); font-weight:bold; font-size:13px; }
+.apercu-nav a{ background:var(--c-accent); color:#fff; font-size:11px; padding:4px 10px; border-radius:20px; }
+.apercu-theme h4{ color:var(--c-principale); margin:0 0 8px; font-size:15px; }
+.apercu-ligne{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+.apercu-bouton{ width:auto; margin:0; padding:6px 14px; }
+.apercu-bouton.secondaire{ background:var(--c-accent-clair); color:var(--c-accent-fonce); }
+.apercu-badge{ display:inline-block; background:var(--c-fond-clair); color:var(--c-principale);
+    border:1px solid var(--c-accent-clair); border-radius:12px; padding:3px 10px; font-size:12px; font-weight:bold; }
+.apercu-carte{ background:#fff; border-radius:8px; padding:8px 12px; margin-top:10px; }
+.apercu-carte strong{ color:var(--c-principale); font-size:13px; }
+.ligne-actions{ display:flex; gap:10px; flex-wrap:wrap; }
+.ligne-actions .btn-plat{ width:auto; }
+
+/* ---------- Ticket de commande (admin/ticket.php) ---------- */
+.page-ticket-body{ justify-content:flex-start; align-items:center; padding-bottom:12px; }
+.ticket-toolbar{ display:flex; justify-content:center; gap:8px; margin-bottom:12px; }
+.ticket-toolbar button{ width:auto; margin:0; }
+.ticket-toolbar .btn-action{ padding:8px 18px; font-size:13px; }
+.ticket-toolbar .btn-action.imprimer{ background:var(--c-accent); color:#fff; }
+
+/* Ticket de caisse compact (largeur ~80 mm) */
+.ticket{ width:80mm; max-width:94%; margin:0 auto; padding:10px 12px; background:#fff;
+         font-family:'Courier New', monospace; font-size:12px; color:#222;
+         border:1px solid #999; border-radius:4px; box-shadow:0 2px 8px rgba(0,0,0,0.15); }
+.ticket h1{ font-family:'Courier New', monospace; font-size:16px; margin:0 0 2px; }
+.ticket-sous-titre{ text-align:center; margin:0 0 2px; font-size:11px; color:#555; }
+.ticket-ligne{ display:flex; justify-content:space-between; gap:8px; padding:1px 0; }
+.ticket-liste{ list-style:none; margin:0; padding:0; }
+.ticket-liste li{ display:flex; justify-content:space-between; gap:8px; padding:2px 0; }
+.ticket-liste .nom{ flex:1; }
+.ticket-liste .prix{ white-space:nowrap; }
+.ticket-separateur{ border:none; border-top:1px dashed #777; margin:6px 0; }
+.ticket-total{ display:flex; justify-content:space-between; font-weight:bold; font-size:13px; }
+.ticket-pied{ text-align:center; font-size:10px; color:#555; margin:8px 0 0; }
+
+/* Impression : seule la zone du ticket est imprimée */
+@media print{
+    .no-print{ display:none !important; }
+    .fond{ display:none !important; }
+    .footer{ display:none !important; }
+    body.page-ticket-body{ background:#fff; padding:0; }
+    .ticket-toolbar{ display:none !important; }
+    .ticket{ width:auto; max-width:80mm; border:none; box-shadow:none; margin:0 auto; }
+}
+
+/* ---------- Messages ---------- */
+.succes{ color:#2e7d32; font-weight:bold; text-align:center; background:#e8f5e9;
+         border:1px solid #a5d6a7; padding:10px; border-radius:8px; font-size:14px; }
+.erreur{ color:#c62828; font-weight:bold; text-align:center; background:#ffebee;
+         border:1px solid #ef9a9a; padding:10px; border-radius:8px; font-size:14px; }
+
+/* ---------- Barre de navigation et pied de page ---------- */
+.navbar{ position:fixed; top:0; left:0; right:0; z-index:30; display:flex; align-items:center;
+         justify-content:space-between; flex-wrap:wrap; gap:6px; padding:6px 16px;
+         background:var(--c-fond-nav); box-shadow:0 2px 10px rgba(0,0,0,0.4); }
+.navbar-logo{ color:var(--c-accent-clair); font-size:15px; }
+.navbar-logo:hover{ text-decoration:none; }
+.navbar-liens{ display:flex; gap:6px; }
+.navbar-liens a{ color:#fff; font-size:11px; padding:5px 12px; border-radius:20px;
+                 background:rgba(255,255,255,0.08); }
+.navbar-liens a:hover{ background:var(--c-accent); text-decoration:none; }
+.navbar-liens a.actif{ background:var(--c-accent); }
+
+.formulaire{ position:relative; }
+
+.footer{ position:fixed; left:0; right:0; bottom:0; z-index:30; padding:1px 4px; text-align:center;
+         font-size:10px; color:var(--c-accent-clair); background:var(--c-fond-nav); }
+
+/* ---------- Adaptation mobile ---------- */
+@media (max-width:768px){
+    body{ padding-top:88px; }
+    .container{ padding:8px 14px; }
+    .navbar{ flex-direction:column; gap:6px; padding:6px 10px; }
+    .navbar-liens{ width:100%; justify-content:center; }
+    .navbar-liens a{ flex:1; text-align:center; font-size:11px; padding:5px 8px; }
+    .table-commandes th, .table-commandes td{ padding:6px 8px; font-size:12px; }
+    .total-general{ font-size:13px; padding:10px; }
+    .ligne-corbeille .prix{ font-size:11px; }
+}
+
+@media (max-width:480px){
+    .container.liste{ padding:8px 8px; }
+    .grille-themes{ grid-template-columns:repeat(auto-fill, minmax(120px, 1fr)); }
+}
