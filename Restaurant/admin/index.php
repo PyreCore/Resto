@@ -13,9 +13,13 @@ try {
 $message = '';
 
 /* Validation d'une commande : elle quitte la liste globale et est archivée
-   (en-tête dans commandes_archivees + une ligne par plat) */
+   (en-tête dans commandes_archivees + une ligne par plat). Action via lien
+   GET : le jeton CSRF est requis. */
 if (isset($_GET['action']) && $_GET['action'] === 'valider'
     && isset($_GET['id']) && is_numeric($_GET['id'])) {
+    if (!csrf_valider()) {
+        $message = '<div class="erreur">Session expirée. Veuillez réessayer.</div>';
+    } else {
     $id = (int)$_GET['id'];
     $stmt = $bdd->prepare("SELECT * FROM commandes WHERE id=:id");
     $stmt->execute(array(':id' => $id));
@@ -59,17 +63,22 @@ if (isset($_GET['action']) && $_GET['action'] === 'valider'
         $bdd->commit();
         $message = '<div class="succes">La commande n° ' . $id . ' a été validée et archivée dans l\'historique.</div>';
     }
+    }
 }
 
-/* Changement de statut d'une commande (ligne individuelle) */
+/* Changement de statut d'une commande (ligne individuelle, jeton CSRF requis) */
 $statuts = array('en_cours', 'livree', 'annulee');
 if (isset($_GET['action']) && $_GET['action'] === 'statut'
     && isset($_GET['id']) && is_numeric($_GET['id'])
     && isset($_GET['nouveau_statut']) && in_array($_GET['nouveau_statut'], $statuts)) {
-    $id = (int)$_GET['id'];
-    $bdd->prepare("UPDATE commandes SET statut=:statut WHERE id=:id")
-        ->execute(array(':statut' => $_GET['nouveau_statut'], ':id' => $id));
-    $message = '<div class="succes">Le statut de la commande a bien été modifié.</div>';
+    if (!csrf_valider()) {
+        $message = '<div class="erreur">Session expirée. Veuillez réessayer.</div>';
+    } else {
+        $id = (int)$_GET['id'];
+        $bdd->prepare("UPDATE commandes SET statut=:statut WHERE id=:id")
+            ->execute(array(':statut' => $_GET['nouveau_statut'], ':id' => $id));
+        $message = '<div class="succes">Le statut de la commande a bien été modifié.</div>';
+    }
 }
 
 /* Filtres de recherche */
@@ -281,13 +290,13 @@ function classeStatut($statut) {
             echo '<div class="carte-actions">';
             echo '<a class="btn-action statut en-cours" href="ticket.php?id=' . (int)$ligne['id'] . '" target="_blank">Imprimer le ticket</a>';
             if ($ligne['statut'] !== 'en_cours') {
-                echo '<a class="btn-action statut en-cours" href="index.php?action=statut&nouveau_statut=en_cours&id=' . (int)$ligne['id'] . '">Remettre en cours</a>';
+                echo '<a class="btn-action statut en-cours" href="index.php?action=statut&nouveau_statut=en_cours&id=' . (int)$ligne['id'] . '&csrf=' . urlencode(csrf_token()) . '">Remettre en cours</a>';
             }
             if ($ligne['statut'] !== 'annulee') {
-                echo '<a class="btn-action statut livree" href="index.php?action=valider&id=' . (int)$ligne['id'] . '">Marquer validé</a>';
+                echo '<a class="btn-action statut livree" href="index.php?action=valider&id=' . (int)$ligne['id'] . '&csrf=' . urlencode(csrf_token()) . '">Marquer validé</a>';
             }
             if ($ligne['statut'] !== 'annulee') {
-                echo '<a class="btn-action statut annulee" href="index.php?action=statut&nouveau_statut=annulee&id=' . (int)$ligne['id'] . '">Annuler</a>';
+                echo '<a class="btn-action statut annulee" href="index.php?action=statut&nouveau_statut=annulee&id=' . (int)$ligne['id'] . '&csrf=' . urlencode(csrf_token()) . '">Annuler</a>';
             }
             echo '</div>';
 

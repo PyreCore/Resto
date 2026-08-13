@@ -20,7 +20,11 @@ try {
 $clesCouleurs = array('couleur_fond', 'couleur_principale', 'couleur_accent',
                       'couleur_accent_fonce', 'couleur_accent_clair');
 
-/* Enregistrement des couleurs personnalisées */
+/* Enregistrement des couleurs personnalisées / réinitialisation du thème :
+   le jeton CSRF du formulaire doit être valide */
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_valider()) {
+    $message = '<div class="erreur">Session expirée. Veuillez réessayer.</div>';
+} else {
 if (isset($_POST['enregistrer'])) {
     $invalide = false;
     foreach ($clesCouleurs as $cle) {
@@ -60,6 +64,7 @@ if (isset($_POST['reinitialiser'])) {
             ->execute(array(':cle' => $cle, ':valeur' => $valeur, ':valeur2' => $valeur));
     }
     $message = '<div class="succes">Le thème par défaut « Brun chaleureux » a été rétabli.</div>';
+}
 }
 
 /* Couleurs actuellement enregistrées */
@@ -135,6 +140,7 @@ $pageCourante = 'couleurs';
     <div class="bloc-theme">
         <h3 class="titre-section">Couleurs personnalisées</h3>
         <form method="post" action="parametres.php" id="form-couleurs">
+            <input type="hidden" name="csrf" value="<?php echo csrf_token(); ?>"/>
             <div class="grille-couleurs">
                 <?php foreach ($clesCouleurs as $cle): ?>
                 <div class="champ-couleur">

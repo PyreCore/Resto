@@ -1,0 +1,7 @@
+# Garde-fou : le dépôt Git doit ne contenir QUE le projet Restaurant.
+# Tout le reste de C:\wamp64\www (wordpress, Ruben, fichiers WAMP...)
+# est ignoré pour éviter de l'embarquer par accident lors d'un « git add . ».
+*
+!Restaurant/
+!Restaurant/**
+!.gitignore

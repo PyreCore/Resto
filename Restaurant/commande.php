@@ -49,6 +49,7 @@
             ?>
 
             <form action="commandes-ajout.php" method="post" class="formulaire-commande">
+                <input type="hidden" name="csrf" value="<?php echo csrf_token(); ?>"/>
 
                 <div class="grille-commande">
 

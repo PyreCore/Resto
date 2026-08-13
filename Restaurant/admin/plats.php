@@ -12,8 +12,11 @@ try {
 
 $message = '';
 
-/* Ajout d'une table (formulaire « nouvelle table ») */
-if (isset($_POST['nouvelle_table'])) {
+/* Ajout d'une table (formulaire « nouvelle table ») et ajout/modification
+   d'un plat : le jeton CSRF du formulaire doit être valide */
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_valider()) {
+    $message = '<div class="erreur">Session expirée. Veuillez réessayer.</div>';
+} elseif (isset($_POST['nouvelle_table'])) {
     $nouvelleTable = trim($_POST['nouvelle_table']);
     if ($nouvelleTable === '' || !is_numeric($nouvelleTable) || (int)$nouvelleTable <= 0) {
         $message = '<div class="erreur">Le numéro de table doit être un nombre positif.</div>';
@@ -65,20 +68,28 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-/* Suppression d'un plat */
+/* Suppression d'un plat (action via lien GET, jeton CSRF requis) */
 if (isset($_GET['action']) && $_GET['action'] === 'supprimer'
     && isset($_GET['id']) && is_numeric($_GET['id'])) {
-    $bdd->prepare("DELETE FROM plats WHERE id=:id")
-        ->execute(array(':id' => (int)$_GET['id']));
-    $message = '<div class="succes">Le plat a bien été supprimé.</div>';
+    if (!csrf_valider()) {
+        $message = '<div class="erreur">Session expirée. Veuillez réessayer.</div>';
+    } else {
+        $bdd->prepare("DELETE FROM plats WHERE id=:id")
+            ->execute(array(':id' => (int)$_GET['id']));
+        $message = '<div class="succes">Le plat a bien été supprimé.</div>';
+    }
 }
 
-/* Suppression d'une table */
+/* Suppression d'une table (action via lien GET, jeton CSRF requis) */
 if (isset($_GET['action']) && $_GET['action'] === 'supprimer_table'
     && isset($_GET['id']) && is_numeric($_GET['id'])) {
-    $bdd->prepare("DELETE FROM tables WHERE id=:id")
-        ->execute(array(':id' => (int)$_GET['id']));
-    $message = '<div class="succes">La table a bien été retirée.</div>';
+    if (!csrf_valider()) {
+        $message = '<div class="erreur">Session expirée. Veuillez réessayer.</div>';
+    } else {
+        $bdd->prepare("DELETE FROM tables WHERE id=:id")
+            ->execute(array(':id' => (int)$_GET['id']));
+        $message = '<div class="succes">La table a bien été retirée.</div>';
+    }
 }
 
 /* Plat à modifier (pré-remplissage du formulaire) */
@@ -139,6 +150,7 @@ include '../theme.php';
 
                 <!-- Formulaire d'ajout ou de modification d'un plat -->
                 <form method="post" action="plats.php" class="formulaire-plat">
+                    <input type="hidden" name="csrf" value="<?php echo csrf_token(); ?>"/>
                     <input type="hidden" name="id" value="<?php echo $platModif ? (int)$platModif['id'] : ''; ?>"/>
                     <div class="champ-plat">
                         <label for="categorie">Catégorie</label>
@@ -182,7 +194,7 @@ include '../theme.php';
                                         <td class="montant-total"><?php echo number_format($p['prix'], 0, ',', ' '); ?> F</td>
                                         <td class="cellule-actions">
                                             <a class="btn-action statut en-cours" href="plats.php?action=modifier&id=<?php echo (int)$p['id']; ?>">Modifier</a>
-                                            <a class="btn-action supprimer" href="plats.php?action=supprimer&id=<?php echo (int)$p['id']; ?>"
+                                            <a class="btn-action supprimer" href="plats.php?action=supprimer&id=<?php echo (int)$p['id']; ?>&csrf=<?php echo urlencode(csrf_token()); ?>"
                                                onclick="return confirm('Supprimer le plat « <?php echo htmlspecialchars(addslashes($p['nom'])); ?> » ?');">Supprimer</a>
                                         </td>
                                     </tr>
@@ -208,6 +220,7 @@ include '../theme.php';
             <div class="groupe-plats bloc-tables">
                 <h2 class="titre-categorie">Tables de la salle</h2>
                 <form method="post" action="plats.php" class="filtres">
+                    <input type="hidden" name="csrf" value="<?php echo csrf_token(); ?>"/>
                     <input type="number" name="nouvelle_table" min="1" step="1"
                            placeholder="N° de table à ajouter (ex. : 11)" required/>
                     <button type="submit">Ajouter la table</button>
@@ -220,7 +233,7 @@ include '../theme.php';
                             <tr>
                                 <td>Table n° <?php echo (int)$t['numero']; ?></td>
                                 <td class="cellule-actions">
-                                    <a class="btn-action supprimer" href="plats.php?action=supprimer_table&id=<?php echo (int)$t['id']; ?>"
+                                    <a class="btn-action supprimer" href="plats.php?action=supprimer_table&id=<?php echo (int)$t['id']; ?>&csrf=<?php echo urlencode(csrf_token()); ?>"
                                        onclick="return confirm('Retirer la table n° <?php echo (int)$t['numero']; ?> ?');">Retirer</a>
                                 </td>
                             </tr>

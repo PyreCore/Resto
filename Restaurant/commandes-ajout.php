@@ -24,6 +24,11 @@
  * Le menu est géré depuis l'administration (table « plats »).
  */
 
+    // Le jeton CSRF du formulaire doit être présent et valide
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_valider()) {
+        die('<div class="erreur">Session expirée. Veuillez revenir au formulaire et réessayer.</div>');
+    }
+
     $plats = [];
     $tablesDisponibles = [];
     try {
